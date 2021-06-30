@@ -1,13 +1,13 @@
 import json
 import os
 from flask import Flask, request, Response
-from src.utils.model import ModelSetup,ModelUtil
+from src.utils.model import ModelSetup, ModelUtil
 from src.utils.preprocess import ImageProcessing
 
 app = Flask(__name__)
 
 MODEL_PATH = ModelSetup(os.path.join(
-    os.getcwd(),'model')).get_latest_version()
+    os.getcwd(), 'model')).get_latest_version()
 model = ModelUtil(MODEL_PATH)
 CLASS_LABELS = ['Cats', 'Dogs']
 INPUT_RESIZE = model.model.input_shape[1:3]

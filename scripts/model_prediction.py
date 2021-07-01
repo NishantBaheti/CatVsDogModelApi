@@ -3,7 +3,7 @@ from PIL import Image
 import io
 import numpy as np
 
-model_path = '../api/model/model-v0.0.1'
+model_path = '../modelapi/model/model-v0.0.1'
 dataset_path = "../dataset/cat/cat.1.jpg"
 
 model = tf.keras.models.load_model(model_path)
@@ -15,6 +15,7 @@ with open(dataset_path, "rb") as file:
 
 img = img.resize(size=resize_param)
 # img.show()
+print(type(img))
 
 
 img = np.array(img)

@@ -3,10 +3,13 @@ Machine Learning Model management module
 """
 import os
 import re
+from typing import List, Union
+import logging
+
 import numpy as np
 import tensorflow as tf
-from typing import List, Union
 
+logging.getLogger(__name__)
 
 class ModelSetup:
     """Setup Model with the path of directory
@@ -47,7 +50,7 @@ class ModelSetup:
         Returns:
             str: version string.
         """
-        regex_str = '\\v?(\d+)\.(\d+)\.(\d+)'
+        regex_str = r'\v?(\d+)\.(\d+)\.(\d+)'
         match = re.search(regex_str, in_str)
         if match:
             return match.group()
@@ -58,12 +61,12 @@ class ModelSetup:
 
         Returns:
             str: model path.
-        """         
+        """
         latest_version = sorted(
             self.models, key=self.get_version_from_string, reverse=True)[0]
         return os.path.join(self.dir_path, latest_version)
 
-    def get_specific_version(self, version: str) -> Union[str,None]:
+    def get_specific_version(self, version: str) -> Union[str, None]:
         """Get specific versions model.
 
         Args:
@@ -93,51 +96,81 @@ class ModelSetup:
 
 
 class ModelUtil:
+    """Machine Learning Model Utility.
 
-    def __init__(self, model_path):
-        if os.path.isdir(model_path):
-            self.model = tf.keras.models.load_model(model_path)
-        else:
-            raise AttributeError(f"{model_path} doesn't exist.")
+    Args:
+        model_path (str): machine learning model path.
+    """
 
-    def _add_dim_for_model(self, mat):
+    def __init__(self, model_path: str):
+        """Constructor"""
+        self._model = tf.keras.models.load_model(model_path)
+
+    @property
+    def model(self):
+        """property to get model"""
+        return self._model
+
+    @property
+    def input_shape(self):
+        """property to get input matrix shape"""
+        if self._model is not None:
+            return self._model.input_shape
+        return None
+
+    @staticmethod
+    def _add_dim_for_model(mat: np.ndarray) -> np.ndarray:
+        """Add dimension for machine learning model input.
+
+        Args:
+            mat (np.ndarray): input matrix.
+
+        Returns:
+            np.ndarray: output matrix.
+        """
         mat = np.expand_dims(mat, axis=0)  # adding extra dimension
         return mat
 
-    def predict(self, image_mat):
+    def predict(self, image_mat: np.ndarray) -> np.ndarray:
+        """Prediction method.
 
+        Args:
+            image_mat (np.ndarray): input image matrix.
+
+        Returns:
+            np.ndarray: output prediction.
+        """
         if len(image_mat.shape) == 3:
             # it was one image matrix. converting it into a row
             image_mat = self._add_dim_for_model(image_mat)
 
-        result = self.model.predict(x=image_mat)
+        result = self._model.predict(x=image_mat)
         return result
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+#     model_setup = ModelSetup("../../model")
 
-    model_setup = ModelSetup("../../model")
+#     print(model_setup.models)
 
-    print(model_setup.models)
+#     model_path = model_setup.get_latest_version()
 
-    model_path = model_setup.get_latest_version()
+#     print(model_setup.get_latest_version())
 
-    print(model_setup.get_latest_version())
+#     print(model_setup.get_specific_version('0.0.1'))
 
-    print(model_setup.get_specific_version('0.0.1'))
+#     print(model_setup.get_by_name('model-v0.0.1'))
 
-    print(model_setup.get_by_name('model-v0.0.1'))
+#     model = ModelUtil(model_path)
 
-    model = ModelUtil(model_path)
+#     from PIL import Image
+#     import io
 
-    from PIL import Image
-    import io
+#     with open("../../dataset/cat/cat.1.jpg", "rb") as file:
+#         data = file.read()
+#         img = Image.open(io.BytesIO(data))
 
-    with open("../../dataset/cat/cat.1.jpg", "rb") as file:
-        data = file.read()
-        img = Image.open(io.BytesIO(data))
-
-    img = img.resize(size=(128, 128))
-    img = np.array(img)
-    result = model.predict(img)
-    print(result)
+#     img = img.resize(size=(128, 128))
+#     img = np.array(img)
+#     result = model.predict(img)
+#     print(result)

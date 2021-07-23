@@ -17,8 +17,8 @@ from flask_cors import cross_origin
 from src.utils.ml_model import ModelSetup, ModelUtil
 from src.utils.preprocess import ImageProcessing
 
-if 'logs' not in os.listdir():
-    os.mkdir('logs')
+if 'applogs' not in os.listdir():
+    os.mkdir('applogs')
 
 ENV = os.environ.get('FLASK_ENV') or 'PRODUCTION'
 LOG_LEVEL_MAP = {
@@ -37,7 +37,7 @@ dictConfig({
         'formatter': 'default'
     }, 'file': {
         'class': 'logging.handlers.RotatingFileHandler',
-        'filename': './logs/api.log',
+        'filename': './applogs/api.log',
         'mode': 'a',
         'formatter': 'default'
     }},

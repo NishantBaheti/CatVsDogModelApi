@@ -12,7 +12,7 @@ from logging.config import dictConfig
 
 from flask import Flask, request, Response
 from flask.logging import create_logger
-from flask_cors import cross_origin
+from flask_cors import CORS,cross_origin
 
 from src.utils.ml_model import ModelSetup, ModelUtil
 from src.utils.preprocess import ImageProcessing
@@ -49,6 +49,7 @@ dictConfig({
 
 
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 _logger = create_logger(app)
 
@@ -96,7 +97,7 @@ def home() -> Response:
         "result": "success",
         "message": "Server is up and running."
     }
-    return Response(json.dumps(res_obj), status=200, mimetype='appllcation/json')
+    return Response(json.dumps(res_obj), status=200, mimetype='application/json')
 
 
 ############################################################################

@@ -49,6 +49,7 @@ dictConfig({
 
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 _logger = create_logger(app)
@@ -87,6 +88,7 @@ _logger.info("input resize parameter %s", INPUT_RESIZE)
 ############################################################################
 # home
 @app.get("/")
+@cross_origin()
 def home() -> Response:
     """home route.
 

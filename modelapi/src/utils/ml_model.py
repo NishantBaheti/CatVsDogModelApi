@@ -115,7 +115,7 @@ class ModelUtil:
     def input_shape(self):
         """property to get input matrix shape"""
         if self._model is not None:
-            return self._model.input_shape
+            return self._model.variables[0].shape
         return None
 
     @staticmethod

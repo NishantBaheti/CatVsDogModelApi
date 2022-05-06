@@ -1,1 +1,1 @@
-Web: gunicorn --chdir modelapi wsgi:app
+web: gunicorn --chdir modelapi wsgi:app

@@ -3,3 +3,5 @@
 /.github
 /applogs
 /__pycache__
+/.git
+/.ipynb_checkpoints

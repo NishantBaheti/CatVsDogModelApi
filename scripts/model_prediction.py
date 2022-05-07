@@ -8,9 +8,7 @@ dataset_path = "../dataset/cat/cat.1.jpg"
 
 model = tf.keras.models.load_model(model_path)
 
-print(dir(model))
-print(model.get_config())
-resize_param = model.input_shape[1:3]
+resize_param = model.variables[0].shape[1:3]
 
 with open(dataset_path, "rb") as file:
     data = file.read()
